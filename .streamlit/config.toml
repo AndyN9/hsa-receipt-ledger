@@ -1,0 +1,12 @@
+[browser]
+gatherUsageStats = false
+
+[server]
+enableCORS = false
+enableXsrfProtection = false
+
+[runner]
+fastReruns = true
+
+[client]
+toolbarMode = "viewer"

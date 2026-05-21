@@ -1,0 +1,13 @@
+.venv/
+__pycache__/
+*.pyc
+.pytest_cache/
+*.egg-info/
+dist/
+build/
+.coverage
+htmlcov/
+
+# Runtime data (auto-created by `hsa-ledger init`)
+hsa_vault/
+hsa_ledger.db

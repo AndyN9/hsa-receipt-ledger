@@ -1,0 +1,36 @@
+[project]
+name = "hsa-ledger"
+version = "0.1.0"
+description = "Local-only MCP server + CLI for managing HSA receipts"
+requires-python = ">=3.11"
+dependencies = [
+    "mcp>=1.0.0",
+    "pypdf>=5.0.0",
+    "pytesseract>=0.3.10",
+    "pyheif>=0.7.0",
+    "Pillow>=10.0.0",
+    "streamlit>=1.35.0",
+    "pandas>=2.2.0",
+    "click>=8.1.0",
+]
+
+[project.scripts]
+hsa-ledger = "hsa_ledger.__main__:main"
+
+[build-system]
+requires = ["setuptools>=75.0"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["src"]
+
+[dependency-groups]
+test = [
+    "pytest>=8.0.0",
+    "pytest-mock>=3.14.0",
+    "pytest-cov>=5.0.0",
+]
