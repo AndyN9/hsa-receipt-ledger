@@ -28,7 +28,7 @@ uv run hsa-ledger --help         # See available commands
 | `hsa-ledger clear --dry-run` | Preview what would be deleted |
 | `hsa-ledger clear --force` | Destructive: delete all records, archive storage files |
 | `hsa-ledger export --csv <path>` | Export ledger to CSV |
-| `hsa-ledger ui` | Launch Streamlit dashboard at `http://localhost:8501` |
+| `hsa-ledger ui` | Launch Streamlit dashboard with receipt previews at `http://localhost:8501` |
 | `hsa-ledger mcp` | Run MCP server over stdio for LLM clients |
 
 ## OpenCode Integration
