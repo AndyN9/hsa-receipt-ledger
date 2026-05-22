@@ -8,6 +8,9 @@ build/
 .coverage
 htmlcov/
 
+# Project-level opencode config (personal preferences, absolute paths)
+.opencode/
+
 # Runtime data (auto-created by `hsa-ledger init`)
 hsa_vault/
 hsa_ledger.db

@@ -9,8 +9,8 @@ Local-only MCP server + CLI for managing Health Savings Account receipts, invoic
 - Python 3.11+
 - [Tesseract OCR](https://github.com/tesseract-ocr/tesseract) engine (for image text extraction)
 
-**macOS:** `brew install tesseract`  
-**Ubuntu/Debian:** `sudo apt install tesseract-ocr`  
+**macOS:** `brew install tesseract`
+**Ubuntu/Debian:** `sudo apt install tesseract-ocr`
 **Windows:** Download from [GitHub releases](https://github.com/UB-Mannheim/tesseract/wiki)
 
 ## Quick Start
@@ -35,7 +35,7 @@ uv run hsa-ledger --help         # See available commands
 
 ## OpenCode Integration
 
-Register the MCP server in `opencode.json`:
+Register the MCP server in `opencode.json` (project level):
 
 ```jsonc
 {
