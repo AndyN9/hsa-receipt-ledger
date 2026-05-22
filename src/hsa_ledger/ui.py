@@ -76,7 +76,7 @@ else:
         eligible=("hsa_eligible_amount", "sum"),
         count=("id", "count"),
     ).reset_index()
-    st.bar_chart(cat_df.set_index("category")[["total", "eligible"]])
+    st.bar_chart(cat_df.set_index("category")[["total", "eligible"]], stack=False)
 
     st.subheader("Reimbursement Tracker")
     total_banked = df["hsa_eligible_amount"].sum()
