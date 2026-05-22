@@ -203,6 +203,10 @@ tests/
 - `pyheif.read_heif` — mock HEIC decode
 - Filesystem operations use `tmp_path` fixture (built-in pytest)
 
+### CI/CD
+
+Tests run automatically on every push to `main` via GitHub Actions (`.github/workflows/ci.yml`). The workflow uses `astral-sh/setup-uv` for the package manager and `actions/setup-python` for Python 3.11.
+
 ### Coverage Target
 
 - Minimum 85% line coverage
@@ -253,6 +257,9 @@ Launch: `hsa-ledger ui` opens `http://localhost:8501`.
 
 ```
 hsa-receipt-ledger/
+├── .github/
+│   └── workflows/
+│       └── ci.yml
 ├── .gitignore
 ├── AGENTS.md
 ├── README.md

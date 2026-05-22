@@ -41,3 +41,8 @@ hsa-ledger --help
 - MCP tool functions in `server.py` must return strings (FastMCP serializes).
 - New SQL queries must be parameterized — no string formatting.
 - Path traversal check required on any user-supplied file name.
+
+## CI/CD
+
+- Ensure CI passes before pushing to `main` — GitHub Actions runs `uv run pytest` on every push
+- CI is purely a test gate; no secrets or services are required
