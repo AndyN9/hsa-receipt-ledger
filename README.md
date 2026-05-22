@@ -1,5 +1,7 @@
 # HSA Receipt Ledger
 
+![CI](https://github.com/AndyN9/hsa-receipt-ledger/actions/workflows/ci.yml/badge.svg)
+
 Local-only MCP server + CLI for managing Health Savings Account receipts, invoices, and Explanation of Benefits (EOBs). LLM-guided extraction with conversational review, backed by a searchable SQLite ledger and a Streamlit dashboard.
 
 ## Requirements
@@ -65,6 +67,10 @@ uv run pytest          # Run all tests
 uv run pytest -v       # Verbose
 uv run pytest --cov    # Coverage (if pytest-cov installed)
 ```
+
+### CI/CD
+
+Tests run automatically on every push to `main` via GitHub Actions. The workflow installs `uv`, syncs dependencies, and runs `uv run pytest`. See [`.github/workflows/ci.yml`](.github/workflows/ci.yml).
 
 ## Tech Stack
 
