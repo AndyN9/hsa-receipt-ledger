@@ -3,6 +3,10 @@ import streamlit as st
 import pandas as pd
 from hsa_ledger.database import init_db, get_all_records, get_stats
 
+
+def _is_image_path(file_path: str) -> bool:
+    return file_path.lower().endswith((".png", ".jpg", ".jpeg", ".gif", ".webp"))
+
 st.set_page_config(page_title="HSA Receipt Ledger", layout="wide")
 
 DB_PATH = os.environ.get("HSA_LEDGER_DB", os.path.join(os.getcwd(), "hsa_ledger.db"))
@@ -50,6 +54,21 @@ else:
             "is_reimbursed": st.column_config.CheckboxColumn(),
         },
     )
+
+    st.subheader("Receipts")
+    for _, row in df.iterrows():
+        fp = row.get("file_path")
+        if fp and os.path.exists(fp):
+            label = f"{row.get('provider', 'Unknown')} — {row.get('transaction_date', '')}"
+            with st.expander(label):
+                if _is_image_path(fp):
+                    st.image(fp, use_container_width=True)
+                else:
+                    with open(fp, "rb") as f:
+                        st.download_button(
+                            "Download Receipt", f.read(),
+                            file_name=row.get("file_name", "receipt"),
+                        )
 
     st.subheader("Category Breakdown")
     cat_df = df.groupby("category").agg(

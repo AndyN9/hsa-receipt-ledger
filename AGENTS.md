@@ -31,7 +31,8 @@ hsa-ledger --help
 | `src/hsa_ledger/vault.py` | File inbox/storage/archive operations |
 | `src/hsa_ledger/extractor.py` | PDF text, OCR, HEIC decode |
 | `src/hsa_ledger/__main__.py` | Click CLI entry point |
-| `src/hsa_ledger/ui.py` | Streamlit dashboard |
+| `src/hsa_ledger/ui.py` | Streamlit dashboard with receipt image previews |
+| `tests/test_ui.py` | UI helper tests (`_is_image_path`) |
 
 ## Rules
 

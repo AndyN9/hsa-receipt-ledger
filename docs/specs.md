@@ -94,7 +94,7 @@ graph TD
 
 1. Run `hsa-ledger ui` in the project directory.
 2. Streamlit launches a local web app at `http://localhost:8501`.
-3. Dashboard shows filterable tables, category breakdown charts, reimbursement status, and links to archived files.
+3. Dashboard shows filterable tables, category breakdown charts, reimbursement status, and expandable receipt image previews.
 
 ---
 
@@ -183,6 +183,7 @@ tests/
 ├── test_extractor.py        # PDF text extraction, image OCR, HEIC decode
 ├── test_server.py           # MCP tool logic (insert with dup check, search, etc.)
 ├── test_cli.py              # CLI commands (init, status, clear, ui, export)
+├── test_ui.py               # UI helpers (image path detection)
 └── fixtures/                # Placeholder for future real fixture files
 ```
 
@@ -226,6 +227,7 @@ Tests run automatically on every push to `main` via GitHub Actions (`.github/wor
 | Screen                    | Content                                                                   |
 | ------------------------- | ------------------------------------------------------------------------- |
 | **Transactions table**    | All records in a sortable, filterable DataTable. Columns match DB schema. |
+| **Receipt previews**      | Expandable image previews for each transaction; PDFs get a download button. |
 | **Category breakdown**    | Bar chart of total/eligible amounts by category.                          |
 | **Reimbursement tracker** | Side-by-side: total banked vs. total reimbursed.                          |
 | **Search**                | Full-text search across provider, category, extracted_text.               |
