@@ -94,7 +94,7 @@ graph TD
 
 1. Run `hsa-ledger ui` in the project directory.
 2. Streamlit launches a local web app at `http://localhost:8501`.
-3. Dashboard shows filterable tables, category breakdown charts, reimbursement status, and expandable receipt image previews.
+3. Dashboard shows filterable tables, category breakdown charts, reimbursement status, and paginated expandable receipt image previews with a dedicated search bar.
 
 ---
 
@@ -227,10 +227,11 @@ Tests run automatically on every push to `main` via GitHub Actions (`.github/wor
 | Screen                    | Content                                                                   |
 | ------------------------- | ------------------------------------------------------------------------- |
 | **Transactions table**    | All records in a sortable, filterable DataTable. Columns match DB schema. |
-| **Receipt previews**      | Expandable image previews for each transaction; PDFs get a download button. |
+| **Receipt previews**      | Paginated expandable image previews (10/25/50 per page) with prev/next navigation; PDFs get a download button. |
 | **Category breakdown**    | Bar chart of total/eligible amounts by category.                          |
 | **Reimbursement tracker** | Side-by-side: total banked vs. total reimbursed.                          |
-| **Search**                | Full-text search across provider, category, extracted_text.               |
+| **Receipt search**        | Scoped search across provider and file name, independent of the transaction search above. |
+| **Transaction search**    | Full-text search across provider, category, extracted_text.               |
 | **Inbox watcher**         | Shows files in inbox not yet processed.                                   |
 
 Launch: `hsa-ledger ui` opens `http://localhost:8501`.

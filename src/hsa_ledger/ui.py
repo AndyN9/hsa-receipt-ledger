@@ -7,6 +7,30 @@ from hsa_ledger.database import init_db, get_all_records, get_stats
 def _is_image_path(file_path: str) -> bool:
     return file_path.lower().endswith((".png", ".jpg", ".jpeg", ".gif", ".webp"))
 
+
+def _filter_receipt_rows(df: pd.DataFrame, search: str = "") -> pd.DataFrame:
+    rows = df[df["file_path"].notna()].copy()
+    if search:
+        mask = (
+            rows["provider"].str.contains(search, case=False, na=False, regex=False)
+            | rows["file_name"].str.contains(search, case=False, na=False, regex=False)
+        )
+        rows = rows[mask]
+    return rows
+
+
+def _pagination_info(total: int, page: int, page_size: int) -> dict:
+    total_pages = max(1, (total + page_size - 1) // page_size)
+    clamped = max(1, min(page, total_pages))
+    start = (clamped - 1) * page_size
+    end = start + page_size
+    return {"page": clamped, "start": start, "end": end, "total_pages": total_pages}
+
+
+def _resolve_page_on_search(new_search: str, prev_search: str, current_page: int) -> int:
+    return 1 if new_search != prev_search else current_page
+
+
 st.set_page_config(page_title="HSA Receipt Ledger", layout="wide")
 
 DB_PATH = os.environ.get("HSA_LEDGER_DB", os.path.join(os.getcwd(), "hsa_ledger.db"))
@@ -46,7 +70,7 @@ else:
     ]
     st.dataframe(
         df[display_cols],
-        use_container_width=True,
+        width='stretch',
         hide_index=True,
         column_config={
             "total_amount": st.column_config.NumberColumn(format="$%.2f"),
@@ -56,19 +80,56 @@ else:
     )
 
     st.subheader("Receipts")
-    for _, row in df.iterrows():
-        fp = row.get("file_path")
-        if fp and os.path.exists(fp):
-            label = f"{row.get('provider', 'Unknown')} — {row.get('transaction_date', '')}"
-            with st.expander(label):
-                if _is_image_path(fp):
-                    st.image(fp, use_container_width=True)
-                else:
-                    with open(fp, "rb") as f:
-                        st.download_button(
-                            "Download Receipt", f.read(),
-                            file_name=row.get("file_name", "receipt"),
-                        )
+    receipt_search = st.text_input("Search receipts by provider or file name", key="receipt_search")
+
+    receipt_rows = _filter_receipt_rows(df, receipt_search)
+
+    if receipt_rows.empty:
+        st.info("No receipts found.")
+    else:
+        page_size = st.session_state.get("receipt_page_size", 10)
+
+        st.session_state.setdefault("receipt_page", 1)
+
+        st.session_state.receipt_page = _resolve_page_on_search(
+            receipt_search, st.session_state.get("prev_receipt_search", ""), st.session_state.receipt_page
+        )
+        if receipt_search != st.session_state.get("prev_receipt_search", ""):
+            st.session_state.prev_receipt_search = receipt_search
+
+        info = _pagination_info(len(receipt_rows), st.session_state.receipt_page, page_size)
+        page = info["page"]
+        start = info["start"]
+        end = info["end"]
+        total_pages = info["total_pages"]
+
+        for _, row in receipt_rows.iloc[start:end].iterrows():
+            fp = row.get("file_path")
+            if fp and os.path.exists(fp):
+                label = f"{row.get('provider', 'Unknown')} — {row.get('transaction_date', '')}"
+                with st.expander(label):
+                    if _is_image_path(fp):
+                        st.image(fp, width='stretch')
+                    else:
+                        with open(fp, "rb") as f:
+                            st.download_button(
+                                "Download Receipt", f.read(),
+                                file_name=row.get("file_name", "receipt"),
+                            )
+
+        _, mid, _ = st.columns([1, 2, 1])
+        with mid:
+            pag_cols = st.columns([1, 1, 1, 1])
+            with pag_cols[0]:
+                st.selectbox("Per page", [10, 25, 50], key="receipt_page_size", label_visibility="collapsed")
+            with pag_cols[1]:
+                if st.button("◀ Prev", key="prev_page", disabled=(page <= 1)):
+                    st.session_state.receipt_page -= 1
+            with pag_cols[2]:
+                st.write(f"Page {page} of {total_pages}")
+            with pag_cols[3]:
+                if st.button("Next ▶", key="next_page", disabled=(page >= total_pages)):
+                    st.session_state.receipt_page += 1
 
     st.subheader("Category Breakdown")
     cat_df = df.groupby("category").agg(
