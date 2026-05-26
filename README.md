@@ -10,7 +10,9 @@ Local-only MCP server + CLI for managing Health Savings Account receipts, invoic
 - [Tesseract OCR](https://github.com/tesseract-ocr/tesseract) engine (for image text extraction)
 
 **macOS:** `brew install tesseract`
+
 **Ubuntu/Debian:** `sudo apt install tesseract-ocr`
+
 **Windows:** Download from [GitHub releases](https://github.com/UB-Mannheim/tesseract/wiki)
 
 ## Quick Start
