@@ -8,6 +8,7 @@ Local-only MCP server + CLI for managing Health Savings Account receipts, invoic
 
 - Python 3.11+
 - [Tesseract OCR](https://github.com/tesseract-ocr/tesseract) engine (for image text extraction)
+- sqlite3 (CLI for local bash scripts)
 
 **macOS:** `brew install tesseract`
 
