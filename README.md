@@ -4,17 +4,12 @@
 
 Local-only MCP server + CLI for managing Health Savings Account receipts, invoices, and Explanation of Benefits (EOBs). LLM-guided extraction with conversational review, backed by a searchable SQLite ledger and a Streamlit dashboard.
 
-## Requirements
+## Prerequisites
 
 - Python 3.11+
+- [uv](https://docs.astral.sh/uv/) (Python package manager)
 - [Tesseract OCR](https://github.com/tesseract-ocr/tesseract) engine (for image text extraction)
 - sqlite3 (CLI for local bash scripts)
-
-**macOS:** `brew install tesseract`
-
-**Ubuntu/Debian:** `sudo apt install tesseract-ocr`
-
-**Windows:** Download from [GitHub releases](https://github.com/UB-Mannheim/tesseract/wiki)
 
 ## Quick Start
 
@@ -24,37 +19,21 @@ uv run hsa-ledger init           # Create vault dirs and DB
 uv run hsa-ledger --help         # See available commands
 ```
 
-## CLI Commands
+## Usage
 
-| Command | Description |
-|---------|-------------|
-| `hsa-ledger init` | Create `hsa_vault/` directory structure and SQLite DB |
-| `hsa-ledger status` | Show vault stats: record count, unreimbursed total, inbox files |
-| `hsa-ledger clear --dry-run` | Preview what would be deleted |
-| `hsa-ledger clear --force` | Destructive: delete all records, archive storage files |
-| `hsa-ledger export --csv <path>` | Export ledger to CSV |
-| `hsa-ledger ui` | Launch Streamlit dashboard with receipt previews at `http://localhost:8501` |
-| `hsa-ledger mcp` | Run MCP server over stdio for LLM clients |
+### CLI Commands
 
-## OpenCode Integration
+| Command                          | Description                                                                 |
+| -------------------------------- | --------------------------------------------------------------------------- |
+| `hsa-ledger init`                | Create `hsa_vault/` directory structure and SQLite DB                       |
+| `hsa-ledger status`              | Show vault stats: record count, unreimbursed total, inbox files             |
+| `hsa-ledger clear --dry-run`     | Preview what would be deleted                                               |
+| `hsa-ledger clear --force`       | Destructive: delete all records, archive storage files                      |
+| `hsa-ledger export --csv <path>` | Export ledger to CSV                                                        |
+| `hsa-ledger ui`                  | Launch Streamlit dashboard with receipt previews at `http://localhost:8501` |
+| `hsa-ledger mcp`                 | Run MCP server over stdio for LLM clients                                   |
 
-Register the MCP server in `opencode.json` (project level):
-
-```jsonc
-{
-  "$schema": "https://opencode.ai/config.json",
-  "mcp": {
-    "hsa-receipt-ledger": {
-      "type": "local",
-      "command": ["/full/path/to/.venv/bin/hsa-ledger", "mcp"]
-    }
-  }
-}
-```
-
-Note: use the full absolute path (not `~`) — opencode runs the command directly, not through a shell.
-
-## Workflow
+### Workflow
 
 1. Save a receipt PDF/photo into `hsa_vault/inbox/`
 2. Ask the LLM: *"Process my new medical receipts"*
@@ -75,22 +54,53 @@ uv run pytest --cov    # Coverage (if pytest-cov installed)
 
 Tests run automatically on every push to `main` via GitHub Actions. The workflow installs `uv`, syncs dependencies, and runs `uv run pytest`. See [`.github/workflows/ci.yml`](.github/workflows/ci.yml).
 
-## Tech Stack
+## Configuration
 
-| Layer | Technology |
-|-------|------------|
-| Runtime | Python 3.11+ |
-| MCP Framework | FastMCP |
-| PDF Text | `pypdf` |
-| OCR | `pytesseract` (Tesseract) |
-| HEIC Decode | `pyheif` |
-| Database | SQLite (stdlib `sqlite3`) |
-| CLI | `click` |
-| Dashboard | `streamlit` + `pandas` |
+### OpenCode Integration
 
-## Security
+Register the MCP server in `opencode.json` (project level):
+
+```jsonc
+{
+  "$schema": "https://opencode.ai/config.json",
+  "mcp": {
+    "hsa-receipt-ledger": {
+      "type": "local",
+      "command": ["/full/path/to/.venv/bin/hsa-ledger", "mcp"]
+    }
+  }
+}
+```
+
+Note: use the full absolute path (not `~`) — opencode runs the command directly, not through a shell.
+
+### Security
 
 - Zero-cloud — all data stays on the local machine
 - Path traversal prevention on all file operations
 - stdio-only MCP transport (no network exposure)
 - All SQL queries parameterized
+
+## Project Structure
+
+```
+hsa_vault/     — inbox, storage, exports (auto-created)
+hsa_ledger.db  — SQLite database (auto-created)
+```
+
+### Tech Stack
+
+| Layer         | Technology                |
+| ------------- | ------------------------- |
+| Runtime       | Python 3.11+              |
+| MCP Framework | FastMCP                   |
+| PDF Text      | `pypdf`                   |
+| OCR           | `pytesseract` (Tesseract) |
+| HEIC Decode   | `pyheif`                  |
+| Database      | SQLite (stdlib `sqlite3`) |
+| CLI           | `click`                   |
+| Dashboard     | `streamlit` + `pandas`    |
+
+## License
+
+MIT License. See [LICENSE](LICENSE).
